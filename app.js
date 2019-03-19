@@ -8,6 +8,22 @@ const err = require('./server/middleware/error.js');
 const app = new Koa();
 const cors = require('koa2-cors'); // 跨域
 const koaBody = require('koa-body'); //解析上传文件的插件
+const {ApolloServer, gql} = require('apollo-server-koa'); // graphql-koa插件
+
+
+const typeDefs = gql`
+    type Query {
+        hello: String
+    }
+`
+
+const resolvers = {
+    Query: {
+        hello: () => 'Hello world!'
+    }
+}
+
+const server = new ApolloServer({typeDefs, resolvers});
 
 app
     .use(logger())
@@ -28,18 +44,22 @@ app
         allowHeaders: ['Content-Type', 'Authorization', 'Accept'],
     }))
     .use(err())
-    .use(jwt({secret: secret.sign}).unless({
-        path: [
-            /^\/api\/login/, 
-            /^\/api\/login_out/, 
-            /^\/api\/see/,
-            /^\/api\/pageview/,
-            /^\/api\/comment/
-        ]
-    }))
+    // .use(jwt({secret: secret.sign}).unless({
+    //     path: [
+    //         /^\/api\/login/, 
+    //         /^\/api\/login_out/, 
+    //         /^\/api\/see/,
+    //         /^\/api\/pageview/,
+    //         /^\/api\/comment/
+    //     ]
+    // }))
   
 app.use(router.routes())
-   .use(router.allowedMethods())  
+   .use(router.allowedMethods());
+
+
+server.applyMiddleware({app});
+
 app.listen(9527, ()=> {
-	console.log(`server running success`)
+	console.log(`server running success at ${server.graphqlPath}`)
 })

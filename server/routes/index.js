@@ -4,6 +4,9 @@ const ArticleController = require('../controller/article.js');
 const router = new Router({
 	prefix: '/api'
 });
+
+const {graphqlKoa} = require('apollo-server-koa');
+const grapqhqlUserController = require('../graphql/controller/user.js')
 //用户处理
 router.post('/', UserController.postLogin)
 router.post('/login', UserController.postLogin)
@@ -21,6 +24,6 @@ router.post('/query/articles', ArticleController.queryArticle);
 router.post('/edit/uploadimg', ArticleController.uploadimg);
 router.post('/delete/article', ArticleController.deleteArticle);
 
-router.post('/test', UserController.test);
+router.post('/test', graphqlKoa(grapqhqlUserController.test));
 
 module.exports = router;
