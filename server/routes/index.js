@@ -5,9 +5,6 @@ const router = new Router({
 	prefix: '/api'
 });
 
-const { ApolloServer } = require('apollo-server-koa');
-console.log('graphqlKoa', require('apollo-server-koa'))
-const userSchema = require('../graphql/user.js')
 //用户处理
 router.post('/', UserController.postLogin)
 router.post('/login', UserController.postLogin)

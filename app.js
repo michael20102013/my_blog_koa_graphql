@@ -9,6 +9,7 @@ const app = new Koa();
 const cors = require('koa2-cors'); // 跨域
 const koaBody = require('koa-body'); //解析上传文件的插件
 const {ApolloServer, gql} = require('apollo-server-koa'); // graphql-koa插件
+const schema = require('./server/graphql/index.js');
 
 
 const typeDefs = gql`
@@ -23,6 +24,7 @@ const resolvers = {
     }
 }
 
+// const server = new ApolloServer({schema});
 const server = new ApolloServer({typeDefs, resolvers});
 
 app
