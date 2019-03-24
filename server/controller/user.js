@@ -6,53 +6,35 @@ const util = require('util');
 const verify = util.promisify(jwt.verify);
 class UserController {
     static async postLogin (ctx) {
-        const data = ctx.request.body;
+        const data = ctx;
         //查询用户
-		let user = await UserModel.queryUser(data.name);
+		let user = await UserModel.queryUser(data.username);
 		if(user[0]){
 			user = user[0];
 		}else{
-			//do nothing
+			user = false;
 		}
         //转化成json对象
         let strUser = JSON.stringify(user);
-		let jsonUsesr = JSON.parse(strUser);
-        if(user) {
-            // if(bcrypt.compareSync(data['password'], jsonUsesr.password)) {
-            if(data['password']===jsonUsesr.password) {
-                //用户 token
-                const userToken = {
-                    name: jsonUsesr.name,
-                    id: user.id
-                }
-                // 签发 token
-                const token = jwt.sign(userToken, secret.sign, {expiresIn: 3600 * 24 * 30 * 12 * 10})
-                let data = {'token':token};
-                //把token存储到数据库
-                // UserModel.updateUser(token,data);
-                UserModel.updateUser( jsonUsesr.name,data);
-                //解析token
-                // let payload = await verify(token, secret.sign);
-                ctx.body = {
-                    name:userToken.name,
-                    message: '成功',
-                    token,
-                    code: 0,
-                    cc:0
-                }
+        let jsonUsesr = JSON.parse(strUser);
+        // if(bcrypt.compareSync(data['password'], jsonUsesr.password)) {
+        if (data['password'] === jsonUsesr.password && (data['password'] !== undefined && jsonUsesr.password !== undefined)) {
+            //用户 token
+            const userToken = {
+                name: jsonUsesr.name,
+                id: user.id
             }
-            else {
-                ctx.body = {
-                    code: 1,
-					message: '用户名和密码错误',
-					cc:1
-                }
-            }
-        }
-        else {
-            ctx.body = {
-                code: 2,
-                message: '用户名不存在'
+            // 签发 token
+            const token = jwt.sign(userToken, secret.sign, { expiresIn: 3600 * 24 * 30 * 12 * 10 })
+            let data = { 'token': token };
+            //把token存储到数据库
+            // UserModel.updateUser(token,data);
+            UserModel.updateUser(jsonUsesr.name, data);
+            //解析token
+            // let payload = await verify(token, secret.sign);
+            return {
+                name: userToken.name,
+                token: token,
             }
         }
     }

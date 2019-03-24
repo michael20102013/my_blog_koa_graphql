@@ -24,8 +24,13 @@ const resolvers = {
     }
 }
 
-// const server = new ApolloServer({schema});
-const server = new ApolloServer({typeDefs, resolvers});
+const server = new ApolloServer({
+    schema,
+    context: ({ ctx }) => {
+        console.log('req', ctx)
+    }
+});
+// const server = new ApolloServer({typeDefs, resolvers});
 
 app
     .use(logger())

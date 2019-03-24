@@ -128,7 +128,8 @@ class ArticleController {
     }
     //查询文章
     static async queryArticle (ctx) {
-        let data = ctx.request.body;
+        console.log('ctx', ctx)
+        let data = ctx;
         if(typeof data === 'string') {
             let obj = {};
             let urlArr = data.split('&');
@@ -140,7 +141,7 @@ class ArticleController {
         }else {
             //do nothing
         }
-        let verifyTk = await commonObj.verifyToken(ctx);
+        // let verifyTk = await commonObj.verifyToken(ctx);
         let id = data.id ? data.id : undefined;
         let limit = data.limit ? parseInt(data.limit) : -1;
         let skip = data.skip ? data.skip : 0;  
@@ -148,20 +149,7 @@ class ArticleController {
         articles.forEach((item, index) => {
             item.user_view_count = item.user_view.length
         })
-        if (articles) {
-            ctx.body = {
-                message: '文章查询成功',
-                data: articles,
-                cc: 0,
-                islogin: verifyTk
-            }
-        }else{
-            ctx.body = {
-                message: '文章查询失败',
-                cc: 1,
-                islogin: verifyTk
-            }
-        }
+        return articles;
     }
     //上传图片
     static async uploadimg(ctx) {
