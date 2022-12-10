@@ -16,7 +16,7 @@
     "mockdev": "concurrently \"npm run dev\" \"npm run mock\" \"nodemon app.js\""
   },
   "dependencies": {
-    "apollo-server-koa": "^2.4.8",
+    "apollo-server-koa": "^2.26.1",
     "axios": "^0.18.0",
     "bcryptjs": "^2.4.3",
     "concurrently": "^3.5.1",
